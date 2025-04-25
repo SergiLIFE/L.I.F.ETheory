@@ -1,3 +1,13 @@
+import asyncio
+from your_module import run_life_algorithm
+
+async def test_end_to_end():
+    # Run the full algorithm
+    await run_life_algorithm()
+
+# Run the test
+if __name__ == "__main__":
+    asyncio.run(test_end_to_end())
 # L.I.F.ETheory
 import torch
 import onnxruntime as ort
@@ -4894,6 +4904,7 @@ if __name__ == "__main__":
 import asyncio
 import logging
 import numpy as np
+import pytest
 import cProfile
 import pstats
 import azure.functions as func
@@ -5294,6 +5305,10 @@ def main(event: func.EventHubEvent):
 # Run the integration
 if __name__ == "__main__":
     asyncio.run(run_life_algorithm())
+
+@pytest.mark.benchmark
+def test_performance(benchmark):
+    benchmark(run_life_algorithm)
 import asyncio
 import logging
 import numpy as np
@@ -5389,6 +5404,51 @@ logger = logging.getLogger(__name__)
 # Integration of LIFETheoryAlgorithm, AzureServiceManager, QuantumOptimizer, and NeuroKitPreprocessor
 async def run_life_algorithm():
     # Step 1: Initialize components
+    life_algo = LIFETheoryAlgorithm()
+    azure_mgr = AzureServiceManager()
+    quantum_opt = QuantumOptimizer(num_qubits=3)
+    preprocessor = NeuroKitPreprocessor()
+
+    # Step 2: Simulate or load EEG datasets
+    datasets = [
+        {'name': 'PhysioNet', 'data': {'delta': 0.6, 'theta': 0.4, 'alpha': 0.3}},
+        {'name': 'DREAMER', 'data': {'delta': 0.7, 'theta': 0.3, 'alpha': 0.6}},
+    ]
+
+    for dataset in datasets:
+        try:
+            logger.info(f"Processing dataset: {dataset['name']}")
+
+            # Step 3: Preprocess EEG data
+            eeg_raw = dataset['data']
+            processed_eeg = preprocessor.preprocess_eeg_signals(eeg_raw)
+
+            # Step 4: Quantum Optimization
+            quantum_opt.encode_latent_variables(
+                [processed_eeg['delta'], processed_eeg['theta'], processed_eeg['alpha']]
+            )
+            statevector = quantum_opt.optimize()
+            logger.info(f"Optimized Quantum State: {statevector}")
+
+            # Step 5: Azure Integration
+            model = {
+                "dataset": dataset['name'],
+                "state": statevector.tolist(),
+                "timestamp": np.datetime64('now').astype(str)
+            }
+            await azure_mgr.store_model(model)
+            logger.info(f"Model stored successfully for dataset: {dataset['name']}")
+
+            # Step 6: Run L.I.F.E Algorithm
+            results = life_algo.learn(eeg_raw, f"Experience from {dataset['name']}", "Educational Environment")
+            logger.info(f"L.I.F.E Algorithm Results: {results}")
+
+        except Exception as e:
+            logger.error(f"Error processing dataset {dataset['name']}: {e}")
+
+# Run the integration
+if __name__ == "__main__":
+    asyncio.run(run_life_algorithm())
     life_algo = LIFETheoryAlgorithm()
     azure_mgr = AzureServiceManager()
     quantum_opt = QuantumOptimizer(num_qubits=3)
